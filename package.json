@@ -1,5 +1,5 @@
 {
-  "name": "@monee/icon-library",
+  "name": "@josh-gao/icon-library",
   "version": "0.1.0",
   "description": "",
   "main": "./dist/web/index.cjs",
