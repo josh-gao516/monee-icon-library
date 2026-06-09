@@ -24,8 +24,8 @@
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "react": "^19.2.7",
-    "react-native-svg": "^15.15.5"
+    "react": ">=18.0.0",
+    "react-native-svg": ">=13.0.0"
   },
   "module": "./dist/web/index.js",
   "react-native": "./dist/native/index.js",
