@@ -13,6 +13,8 @@
   "type": "module",
   "devDependencies": {
     "cheerio": "^1.2.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "svgo": "^4.0.1",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
