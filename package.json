@@ -2,7 +2,7 @@
   "name": "@monee/icon-library",
   "version": "0.1.0",
   "description": "",
-  "main": "./dist/web/index.js",
+  "main": "./dist/web/index.cjs",
   "scripts": {
     "build": "tsx scripts/build.ts && tsup",
     "prepublishOnly": "npm run build"
@@ -12,9 +12,12 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@types/react": "^19.2.17",
     "cheerio": "^1.2.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-native-svg": "^15.15.5",
     "svgo": "^4.0.1",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
@@ -24,15 +27,15 @@
     "react": "^19.2.7",
     "react-native-svg": "^15.15.5"
   },
-  "module": "./dist/web/index.mjs",
+  "module": "./dist/web/index.js",
   "react-native": "./dist/native/index.js",
   "types": "./dist/native/index.d.ts",
   "exports": {
     ".": {
       "react-native": "./dist/native/index.js",
       "types": "./dist/native/index.d.ts",
-      "import": "./dist/web/index.mjs",
-      "require": "./dist/web/index.js"
+      "import": "./dist/web/index.js",
+      "require": "./dist/web/index.cjs"
     },
     "./icons.json": "./icons.json"
   },
