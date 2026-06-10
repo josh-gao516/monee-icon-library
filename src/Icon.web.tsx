@@ -1,23 +1,19 @@
 import React from 'react';
-import { iconsData, type IconProps, type PathEntry } from './types';
+import { iconsData, defaultSize, defaultViewBox, type IconProps, type PathEntry } from './types';
 
-export function Icon({ name, variant = 'line', size, color, strokeWidth = 2 }: IconProps) {
+export function Icon({ name, size, color, strokeWidth = 2 }: IconProps) {
   const icon = (iconsData as any)[name];
   if (!icon) {
-    if (process.env.NODE_ENV !== 'production') console.warn(`[Icon] 未知 icon: "${name}"`);
+    if (process.env.NODE_ENV !== 'production') console.warn('[icon-library] unknown icon: ' + name);
     return null;
   }
-  const variantData = icon.variants[variant];
-  if (!variantData) {
-    if (process.env.NODE_ENV !== 'production') console.warn(`[Icon] "${name}" 无变体 "${variant}"`);
-    return null;
-  }
-  const resolved = size ?? icon.defaultSize ?? 24;
+  const resolved = size ?? (icon.size as number | undefined) ?? defaultSize;
+  const viewBox = (icon.viewBox as string | undefined) ?? defaultViewBox;
   const c = color ?? 'currentColor';
 
   return (
-    <svg width={resolved} height={resolved} viewBox={icon.viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {variantData.paths.map((p: PathEntry, i: number) =>
+    <svg width={resolved} height={resolved} viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
+      {(icon.paths as PathEntry[]).map((p, i) =>
         p.type === 'stroke' ? (
           <path
             key={i} d={p.d}
@@ -37,4 +33,4 @@ export function Icon({ name, variant = 'line', size, color, strokeWidth = 2 }: I
   );
 }
 
-export type { IconProps, IconName, Variant } from './types';
+export type { IconProps, IconName } from './types';
