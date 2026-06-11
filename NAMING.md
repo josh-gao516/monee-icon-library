@@ -66,7 +66,7 @@ The base name is leftmost; structural suffixes follow in fixed slot order.
 
 | Order | Slot | Meaning | Status in this library | Common tokens (non-exhaustive) |
 |---|---|---|---|---|
-| 1 | count | Quantity | Not used | `2` `3` |
+| 1 | count | Quantity | In use | `2` `3` |
 | 2 | direction | Direction | In use (chevron) | `up` `down` `left` `right` `forward` `backward`; combinable: `up.left` `down.right` |
 | 3 | enclosure | Enclosing shape | Reserved | `circle` `square` `rectangle` `app` `diamond` `shield` `seal` `hexagon` `octagon` |
 | 4 | negation | Negation / disabled | Reserved | `slash` |
@@ -75,7 +75,7 @@ The base name is leftmost; structural suffixes follow in fixed slot order.
 
 Additional conventions:
 - **Direction combination order:** Vertical before horizontal — `arrow.up.left` (not `left.up`).
-- **count / and:** Rare. Count example: `square.2`; combined symbols use `and`, e.g. `arrow.up.and.down`. Not currently used in this library.
+- **count / and:** Rare. Count example: `square.2`; the count slot is now **in use** in this library (`user.2`). Combined symbols use `and`, e.g. `arrow.up.and.down` — the `and` form is not yet used here.
 
 ### 3.4 Parsing Examples
 
@@ -86,11 +86,13 @@ Additional conventions:
 | `arrow.up.circle.fill` | `arrow` (base) · `up` (direction) · `circle` (enclosure) · `fill` (fill) |
 | `trash.slash.fill` | `trash` (base) · `slash` (negation) · `fill` (fill) |
 | `folder.fill.badge.plus` | `folder` (base) · `fill` (fill) · `badge.plus` (badge) |
+| `user.2` | `user` (base) · `2` (count) |
 
 ### 3.5 Three Adoption Disciplines (Must Follow)
 1. **Borrow the syntax, not the vocabulary:** Use the ordering rules above — do not copy Apple's icon names. (SF Symbols uses `person` for a person icon; this library keeps `user`.)
 2. **Every suffixed variant = an independent SVG asset, not a programmatic transform:** `chevron.left` and `chevron.right` are **two separate design files**, not a rotated `chevron`; `.fill` is a separate solid-filled design, not the line icon with auto-fill applied.
 3. **Register only what you have:** A token should appear in a name — and in `SUFFIX_REGISTRY` — only when there is a **real corresponding icon asset**. Do not pre-populate the full Apple token vocabulary.
+4. **Suffixes are naming identity, not a geometry contract; geometry is per-path, not per-icon.** Every suffix (`.fill` / `.circle` / `.badge` / `.up` …) identifies *which independent design asset* a key points to. `.fill` conventionally signals a solid variant as a human-facing retrieval hint (see Discipline 2), but the suffix does **not** mechanically constrain path geometry: `verify` never asserts that a `.fill` key's paths are `type:fill`, nor that a non-`.fill` key's paths are `type:stroke`. Geometry lives entirely in each path's `type` field. A single icon may hold paths of differing `type` (e.g. a future `bell.badge.plus`: bell body `stroke` + badge disc `fill`) — mixed geometry is legal and there is no "icon-level type". A base name is assigned to whichever variant is the most neutral default representation of the concept, independent of line vs. solid.
 
 ### 3.6 Canonical Ruling on fill ↔ badge Ordering
 SF Symbols itself is inconsistent here: `folder.fill.badge.plus` (fill before badge) vs `bell.badge.fill` / `app.badge.fill` (fill after badge).
@@ -147,6 +149,8 @@ export interface SuffixDef { slot: SuffixSlot; order: number; } // lower order =
 // Single source of truth for which dot segments are valid suffixes.
 // Only add a token when there is a real corresponding icon asset.
 export const SUFFIX_REGISTRY: Record<string, SuffixDef> = {
+  // count — order 1
+  '2':   { slot: 'count', order: 1 },
   // direction — order 2
   up:    { slot: 'direction', order: 2 },
   down:  { slot: 'direction', order: 2 },
@@ -194,6 +198,19 @@ export function validateIconName(key: string): string[] {
 }
 ```
 
+### 5.3 Declared Placeholders (KNOWN_ORPHANS, verify-only)
+
+When a `.fill` variant ships before its line base name exists (solid-first), register the key in `scripts/known-orphans.ts`:
+
+```ts
+// scripts/known-orphans.ts — build-only, NOT published with the package
+export const KNOWN_ORPHANS: Record<string, string> = {
+  'user.2.fill': 'solid-first; line base user.2 pending',
+};
+```
+
+The orphan check treats a declared key as an **expected placeholder** and emits an `ℹ️` (informational; does not affect the exit code) instead of a `⚠️`. Undeclared orphans still `⚠️`. Remove the entry once the line base name is added. The sibling-base lookup uses real parsing (`parseIconName`), not naive string stripping, so `user.2.fill` resolves its sibling to `user.2` — not `user`.
+
 ---
 
 ## 6. verify.ts Upgrade Checklist
@@ -201,9 +218,10 @@ export function validateIconName(key: string): string[] {
 Replace the current single `fill`-only whitelist check with:
 1. Run `validateIconName` on every key and aggregate errors.
 2. **Base name hyphen check** — automatically catches any un-migrated `credit-card` style names.
-3. Retain orphan check: `x.fill` exists but base `x` does not → warn.
-4. Retain: path type ∈ `{stroke, fill}`; fill paths with even-odd winding must have `fillRule`; no `transform` residue.
+3. Orphan check: `x.fill` whose base `x` is absent → `⚠️`, **unless** the key is declared in `KNOWN_ORPHANS` (§5.3) → `ℹ️` pass.
+4. Retain path checks: `type ∈ {stroke, fill}`; `fillRule ∈ {nonzero, evenodd}` when present (`nonzero` is the SVG default and is left undeclared); no `transform` residue.
 5. Retain: member set of `keyof typeof iconsData` === `Object.keys(icons)`.
+6. Per-icon metadata + viewBox: `description` must be a non-empty string and `tags` a non-empty array; if an entry carries its own `viewBox` it must equal `"0 0 24 24"`, otherwise it inherits the top-level `defaultViewBox`.
 
 ---
 

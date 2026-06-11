@@ -6,6 +6,7 @@ export interface SuffixDef {
 }
 
 export const SUFFIX_REGISTRY: Record<string, SuffixDef> = {
+  '2':    { slot: 'count',     order: 1 },
   up:     { slot: 'direction', order: 2 },
   down:   { slot: 'direction', order: 2 },
   left:   { slot: 'direction', order: 2 },

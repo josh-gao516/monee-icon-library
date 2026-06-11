@@ -15,6 +15,23 @@ follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [2.1.0] — 2026-06-11
+
+### Added
+- `user.2.fill` — two-person / refer-a-friend icon (solid). First use of the count slot (`.2`).
+- Declared-placeholder support in verify (`KNOWN_ORPHANS`): a solid-first `.fill` can be
+  registered as an expected orphan and reported as `ℹ️` instead of `⚠️`.
+
+### Changed
+- `verify` generalized: `fillRule` accepts `{nonzero, evenodd}` (was evenodd-only); added
+  per-icon checks (`description` non-empty, `tags` non-empty, conditional `viewBox === "0 0 24 24"`);
+  added `npm run verify` script entry.
+- Registered count token `2` in `SUFFIX_REGISTRY` (count slot, order 1).
+- NAMING.md: count slot marked in use; added Discipline 4 (suffixes are naming identity,
+  not a geometry contract; geometry is per-path); documented KNOWN_ORPHANS (§5.3).
+
+---
+
 ## [2.0.4] — 2026-06-11
 
 ### Added
