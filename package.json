@@ -12,6 +12,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "@types/node": "^25.9.2",
     "@types/react": "^19.2.17",
     "cheerio": "^1.2.0",
