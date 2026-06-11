@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, basename, relative } from 'node:path';
 import { optimize } from 'svgo';
 import * as cheerio from 'cheerio';
@@ -19,7 +19,13 @@ const svgoConfig = {
 };
 
 type PathEntry = { d: string; type: 'stroke' | 'fill'; fillRule?: string };
-type IconEntry = { paths: PathEntry[]; size?: number; viewBox?: string };
+type IconEntry = {
+  description?: string;
+  tags?: string[];
+  paths: PathEntry[];
+  size?: number;
+  viewBox?: string;
+};
 
 function walkSvgs(dir: string): string[] {
   const results: string[] = [];
@@ -32,6 +38,19 @@ function walkSvgs(dir: string): string[] {
     }
   }
   return results;
+}
+
+// ── 读取现有 icons.json，保留 description 和 tags ──────────
+const existingIcons: Record<string, any> = {};
+if (existsSync(OUT)) {
+  try {
+    const prev = JSON.parse(readFileSync(OUT, 'utf-8'));
+    for (const [name, data] of Object.entries(prev.icons ?? {})) {
+      existingIcons[name] = data;
+    }
+  } catch {
+    // 第一次运行或文件损坏，忽略
+  }
 }
 
 const allFiles = walkSvgs(RAW);
@@ -84,7 +103,12 @@ for (const [key, relPath] of keyToFile) {
     continue;
   }
 
-  const entry: IconEntry = { paths };
+  // ── 构建条目：description / tags 优先从现有数据继承 ──────
+  const entry: IconEntry = {
+    ...(existingIcons[key]?.description != null && { description: existingIcons[key].description }),
+    ...(existingIcons[key]?.tags != null      && { tags: existingIcons[key].tags }),
+    paths,
+  };
   if (viewBox !== DEFAULT_VIEWBOX) entry.viewBox = viewBox;
   if (size !== DEFAULT_SIZE) entry.size = size;
 
