@@ -3,4 +3,5 @@
 // 补齐线稿后,从此表删除对应条目。
 export const KNOWN_ORPHANS: Record<string, string> = {
   'user.2.fill': '实心先行,线稿 user.2 待补',
+  'giftshopee.fill': '实心先行,线稿 giftshopee 待补',
 };

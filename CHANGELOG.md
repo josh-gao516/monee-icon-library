@@ -15,6 +15,15 @@ follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [2.2.0] — 2026-06-11
+
+### Added
+- `giftshopee.fill` — Shopee 每日奖励 / 礼品图标(实心,礼盒 + Shopee "S" 标)。
+  含双语 description + 双语 tags。
+- KNOWN_ORPHANS 新增 `giftshopee.fill` 占位声明(实心先行,线稿 giftshopee 待补)。
+
+---
+
 ## [2.1.0] — 2026-06-11
 
 ### Added
