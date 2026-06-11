@@ -2,7 +2,7 @@
 
 A data-driven icon library for both **React Native** and **Web**. All icons share a single source of truth (`icons.json`), so the same path data renders identically across platforms.
 
-Icons follow **SF Symbols naming conventions** — compound nouns are concatenated (`creditcard`), structural modifiers use dot notation (`chevron.left`, `lock.fill`). See [NAMING.md](./NAMING.md) for the full convention.
+Icons follow **SF Symbols naming conventions** — compound nouns are concatenated (`creditcard`), structural modifiers use dot notation (`chevron.left`, `lock.fill`). See [NAMING.md](https://github.com/josh-gao516/monee-icon-library/blob/main/NAMING.md) for the full convention.
 
 ## Install
 
@@ -75,7 +75,7 @@ On **Web**, `color` is optional and defaults to `currentColor`, so icons inherit
 
 ## Naming conventions
 
-Keys follow SF Symbols conventions — see [NAMING.md](./NAMING.md) for the complete spec. The short version:
+Keys follow SF Symbols conventions — see [NAMING.md](https://github.com/josh-gao516/monee-icon-library/blob/main/NAMING.md) for the complete spec. The short version:
 
 - **Compound nouns are concatenated** (no separator): `creditcard`, not `credit-card` or `credit.card`.
 - **Structural modifiers use dots**: direction (`chevron.left`), fill (`lock.fill`), enclosure (`bell.circle` — future).
