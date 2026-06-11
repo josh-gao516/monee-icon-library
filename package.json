@@ -51,6 +51,8 @@
   "files": [
     "dist",
     "icons.json",
-    "NAMING.md"
+    "NAMING.md",
+    "AGENTS.md",
+    "CHANGELOG.md"
   ]
 }
