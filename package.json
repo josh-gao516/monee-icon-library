@@ -1,6 +1,6 @@
 {
   "name": "@josh-gao/icon-library",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "main": "./dist/web/index.cjs",
   "scripts": {
@@ -49,6 +49,7 @@
   },
   "files": [
     "dist",
-    "icons.json"
+    "icons.json",
+    "NAMING.md"
   ]
 }
